@@ -70,6 +70,7 @@ operatorBtns.forEach((btn) => {
     currentValue = 0;
     if (num1 && num2) {
       updateValue(operate(num1, num2, operator));
+      history.textContent += `${num2} = ${currentValue}`;
     }
     operator = btn.id;
     history.textContent += ` ${operator} `;
@@ -77,8 +78,10 @@ operatorBtns.forEach((btn) => {
 })
 
 equalsBtn.addEventListener('click', () => {
-  num2 = Number(currentValue);
-  currentValue = 0;
-  updateValue(operate(num1, num2, operator));
-  history.textContent += `${num2} = ${currentValue}`;
+  if (num1) {
+    num2 = Number(currentValue);
+    currentValue = 0;
+    updateValue(operate(num1, num2, operator));
+    history.textContent += `${num2} = ${currentValue}`;
+  }
 })
