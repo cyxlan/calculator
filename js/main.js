@@ -1,5 +1,6 @@
 const display = document.querySelector('#display');
 const numBtns = document.querySelectorAll('.num-btn');
+const clearBtn = document.querySelector('#clear-btn');
 
 function add(a, b) {
   return a + b;
@@ -38,4 +39,9 @@ numBtns.forEach((btn) => {
     displayValue += btn.id;
     display.textContent = displayValue;
   })
+})
+
+clearBtn.addEventListener('click', () => {
+  displayValue = "";
+  display.textContent = 0;
 })
