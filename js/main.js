@@ -34,10 +34,6 @@ let operator = "";
 let currentValue = 0;
 
 function updateValue(value) {
-  if (value === 'clear') {
-    currentValue = 0;
-    value = 0;
-  }
   if (currentValue === 0) {
     currentValue = value;
   } else {
@@ -58,7 +54,11 @@ numBtns.forEach((btn) => {
 })
 
 clearBtn.addEventListener('click', () => {
-  updateValue('clear');
+  currentValue = 0;
+  updateValue(0);
+  num1 = 0;
+  num2 = 0;
+  operator = "";
 })
 
 operatorBtns.forEach((btn) => {
