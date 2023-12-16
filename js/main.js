@@ -1,3 +1,6 @@
+const display = document.querySelector('#display');
+const numBtns = document.querySelectorAll('.num-btn');
+
 function add(a, b) {
   return a + b;
 }
@@ -23,7 +26,16 @@ function operate(num1, num2, operator) {
   }
 }
 
-let num1 = Number(prompt("num1: "));
-let num2 = Number(prompt("num2: "));
-let operator = prompt("operator: ");
-console.log(operate(num1, num2, operator));
+// let num1 = Number(prompt("num1: "));
+// let num2 = Number(prompt("num2: "));
+// let operator = prompt("operator: ");
+// console.log(operate(num1, num2, operator));
+
+let displayValue = "";
+
+numBtns.forEach((btn) => {
+  btn.addEventListener('click', () => {
+    displayValue += btn.id;
+    display.textContent = displayValue;
+  })
+})
