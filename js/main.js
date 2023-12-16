@@ -31,22 +31,34 @@ function operate(num1, num2, operator) {
 let num1 = 0;
 let num2 = 0;
 let operator = "";
-let displayValue = "";
+let currentValue = 0;
+
+function updateValue(value) {
+  if (value === 'clear') {
+    currentValue = 0;
+    value = 0;
+  }
+  if (currentValue === 0) {
+    currentValue = value;
+  } else {
+    currentValue += value;
+  }
+  display.textContent = currentValue;
+}
 
 numBtns.forEach((btn) => {
   btn.addEventListener('click', () => {
-    displayValue += btn.id;
-    display.textContent = displayValue;
+    updateValue(btn.id);
   })
 })
 
 clearBtn.addEventListener('click', () => {
-  displayValue = "";
-  display.textContent = 0;
+  updateValue('clear');
 })
 
 operatorBtns.forEach((btn) => {
   btn.addEventListener('click', () => {
     operator = btn.id;
+    updateValue('clear');
   })
 })
