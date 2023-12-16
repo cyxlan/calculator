@@ -28,8 +28,7 @@ function operate(num1, num2, operator) {
   }
 }
 
-let num1 = 0;
-let num2 = 0;
+let num1, num2;
 let operator = "";
 let currentValue = 0;
 
@@ -58,7 +57,14 @@ clearBtn.addEventListener('click', () => {
 
 operatorBtns.forEach((btn) => {
   btn.addEventListener('click', () => {
+    if (num1) {
+      num2 = Number(currentValue);
+      currentValue = 0;
+      updateValue(operate(num1, num2, operator));
+    } else {
+      num1 = Number(currentValue);
+      updateValue('clear');
+    }
     operator = btn.id;
-    updateValue('clear');
   })
 })
