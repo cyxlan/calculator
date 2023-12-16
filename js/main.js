@@ -2,6 +2,7 @@ const display = document.querySelector('#display');
 const numBtns = document.querySelectorAll('.num-btn');
 const operatorBtns = document.querySelectorAll('.operator-btn');
 const clearBtn = document.querySelector('#clear-btn');
+const equalsBtn = document.querySelector('#equals-btn');
 
 function add(a, b) {
   return a + b;
@@ -48,6 +49,11 @@ function updateValue(value) {
 numBtns.forEach((btn) => {
   btn.addEventListener('click', () => {
     updateValue(btn.id);
+    if (!num1) {
+      num1 = Number(currentValue);
+    } else {
+      num2 = Number(currentValue);
+    }
   })
 })
 
@@ -57,14 +63,15 @@ clearBtn.addEventListener('click', () => {
 
 operatorBtns.forEach((btn) => {
   btn.addEventListener('click', () => {
-    if (num1) {
-      num2 = Number(currentValue);
-      currentValue = 0;
+    currentValue = 0;
+    if (num1 && num2) {
       updateValue(operate(num1, num2, operator));
-    } else {
-      num1 = Number(currentValue);
-      updateValue('clear');
     }
     operator = btn.id;
   })
+})
+
+equalsBtn.addEventListener('click', () => {
+  currentValue = 0;
+  updateValue(operate(num1, num2, operator));
 })
