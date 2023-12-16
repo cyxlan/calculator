@@ -30,8 +30,7 @@ function operate(num1, num2, operator) {
   }
 }
 
-let num1, num2;
-let operator = "";
+let num1, num2, operator;
 let currentValue = 0;
 
 function updateValue(value) {
@@ -52,9 +51,9 @@ numBtns.forEach((btn) => {
 clearBtn.addEventListener('click', () => {
   currentValue = 0;
   updateValue(0);
-  num1 = 0;
-  num2 = 0;
-  operator = "";
+  num1 = null;
+  num2 = null;
+  operator = null;
   history.textContent = "";
 })
 
