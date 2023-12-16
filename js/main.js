@@ -30,9 +30,6 @@ function operate(num1, num2, operator) {
   }
 }
 
-let num1, num2, operator;
-let currentValue = 0;
-
 function updateValue(value) {
   if (currentValue === 0) {
     currentValue = value;
@@ -41,6 +38,20 @@ function updateValue(value) {
   }
   display.textContent = currentValue;
 }
+
+// calculate the current equation, then set up variables for the next one
+function calculate() {
+  updateValue(operate(num1, num2, operator));
+  history.textContent += `${num2} = ${currentValue}`;
+  num1 = currentValue;
+  num2 = "";
+  currentValue = 0;
+}
+
+let num1 = null;
+    num2 = null;
+let operator = "";
+let currentValue = 0;
 
 numBtns.forEach((btn) => {
   btn.addEventListener('click', () => {
@@ -53,7 +64,7 @@ clearBtn.addEventListener('click', () => {
   updateValue(0);
   num1 = null;
   num2 = null;
-  operator = null;
+  operator = "";
   history.textContent = "";
 })
 
@@ -64,12 +75,15 @@ operatorBtns.forEach((btn) => {
       history.textContent += num1;
     } else {
       num2 = Number(currentValue);
-      history.textContent += num2;
+      // if num2 has never been set (first equation)
+      if (num2 === null) {
+        history.textContent += num2;
+      }
     }
+    
     currentValue = 0;
     if (num1 && num2) {
-      updateValue(operate(num1, num2, operator));
-      history.textContent += `${num2} = ${currentValue}`;
+      calculate();
     }
     operator = btn.id;
     history.textContent += ` ${operator} `;
@@ -77,10 +91,10 @@ operatorBtns.forEach((btn) => {
 })
 
 equalsBtn.addEventListener('click', () => {
-  if (num1) {
+  if (num1 && operator) {
     num2 = Number(currentValue);
     currentValue = 0;
-    updateValue(operate(num1, num2, operator));
-    history.textContent += `${num2} = ${currentValue}`;
+    calculate();
+    operator = "";
   }
 })
