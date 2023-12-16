@@ -91,7 +91,8 @@ operatorBtns.forEach((btn) => {
 })
 
 equalsBtn.addEventListener('click', () => {
-  if (num1 && operator) {
+  // if full equation has been entered
+  if (num1 && operator && (num2 || currentValue)) {
     num2 = Number(currentValue);
     currentValue = 0;
     calculate();
