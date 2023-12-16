@@ -1,5 +1,6 @@
 const display = document.querySelector('#display');
 const numBtns = document.querySelectorAll('.num-btn');
+const operatorBtns = document.querySelectorAll('.operator-btn');
 const clearBtn = document.querySelector('#clear-btn');
 
 function add(a, b) {
@@ -27,11 +28,9 @@ function operate(num1, num2, operator) {
   }
 }
 
-// let num1 = Number(prompt("num1: "));
-// let num2 = Number(prompt("num2: "));
-// let operator = prompt("operator: ");
-// console.log(operate(num1, num2, operator));
-
+let num1 = 0;
+let num2 = 0;
+let operator = "";
 let displayValue = "";
 
 numBtns.forEach((btn) => {
@@ -44,4 +43,10 @@ numBtns.forEach((btn) => {
 clearBtn.addEventListener('click', () => {
   displayValue = "";
   display.textContent = 0;
+})
+
+operatorBtns.forEach((btn) => {
+  btn.addEventListener('click', () => {
+    operator = btn.id;
+  })
 })
