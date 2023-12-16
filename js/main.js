@@ -45,11 +45,6 @@ function updateValue(value) {
 numBtns.forEach((btn) => {
   btn.addEventListener('click', () => {
     updateValue(btn.id);
-    if (!num1) {
-      num1 = Number(currentValue);
-    } else {
-      num2 = Number(currentValue);
-    }
   })
 })
 
@@ -63,6 +58,11 @@ clearBtn.addEventListener('click', () => {
 
 operatorBtns.forEach((btn) => {
   btn.addEventListener('click', () => {
+    if (!num1) {
+      num1 = Number(currentValue);
+    } else {
+      num2 = Number(currentValue);
+    }
     currentValue = 0;
     if (num1 && num2) {
       updateValue(operate(num1, num2, operator));
@@ -72,6 +72,7 @@ operatorBtns.forEach((btn) => {
 })
 
 equalsBtn.addEventListener('click', () => {
+  num2 = Number(currentValue);
   currentValue = 0;
   updateValue(operate(num1, num2, operator));
 })
