@@ -48,19 +48,23 @@ function calculate() {
     updateValue(operate(num1, num2, operator));
     history.textContent += `${num2} = ${currentValue}`;
     num1 = currentValue;
-    operator = "";
+    // save last num2 value for repeat operation
+    lastNum2 = num2;
   }
   currentValue = "";
   num2 = null;
 }
 
-let num1, num2;
+let num1, num2, lastNum2;
 let operator = "";
 let currentValue = "";
 
 numBtns.forEach((btn) => {
   btn.addEventListener('click', () => {
-    updateValue(btn.id);
+    // prevent updating number if an equation just finished & there isn't a new operator yet
+    if (!lastNum2) {
+      updateValue(btn.id);
+    }
   })
 })
 
@@ -85,8 +89,11 @@ operatorBtns.forEach((btn) => {
     currentValue = "";
     if (typeof num1 === "number" && typeof num2 === "number") {
       calculate();
+      operator = "";
     }
-    if (!operator) {
+    // if the operator hasn't been set yet or the last calculation was a repeat operation
+    if (!operator || lastNum2) {
+      lastNum2 = null;
       operator = btn.id;
       history.textContent += ` ${operator} `;
     }
@@ -98,6 +105,13 @@ equalsBtn.addEventListener('click', () => {
   if (typeof num1 === "number" && operator && (typeof num2 === "number" || currentValue)) {
     num2 = Number(currentValue);
     currentValue = "";
+    calculate();
+  }
+  // if user clicks equals again without entering anything new, repeat the last operation
+  else if (typeof num1 === "number" && operator) {
+    num2 = lastNum2;
+    lastNum2 = null;
+    history.textContent += ` ${operator} `;
     calculate();
   }
 })
