@@ -48,7 +48,7 @@ function calculate() {
   currentValue = 0;
 }
 
-let num1 = null;
+let num1 = null,
     num2 = null;
 let operator = "";
 let currentValue = 0;
@@ -81,10 +81,6 @@ operatorBtns.forEach((btn) => {
       history.textContent += num1;
     } else {
       num2 = Number(currentValue);
-      // if num2 has never been set (first equation)
-      if (num2 === null) {
-        history.textContent += num2;
-      }
     }
     
     currentValue = 0;
