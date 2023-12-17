@@ -31,7 +31,7 @@ function operate(num1, num2, operator) {
 }
 
 function updateValue(value) {
-  if (currentValue == 0) {
+  if (Number(currentValue) === 0) {
     currentValue = value;
   } else {
     currentValue += value;
@@ -41,27 +41,26 @@ function updateValue(value) {
 
 // calculate the current equation, then set up variables for the next one
 function calculate() {
-  updateValue(operate(num1, num2, operator));
-  history.textContent += `${num2} = ${currentValue}`;
-  num1 = currentValue;
-  num2 = "";
+  // prevent dividing by 0
+  if (operator === "÷" && num2 === 0) {
+    updateValue("no");
+  } else {
+    updateValue(operate(num1, num2, operator));
+    history.textContent += `${num2} = ${currentValue}`;
+    num1 = currentValue;
+    operator = "";
+  }
   currentValue = 0;
+  num2 = null;
 }
 
-let num1 = null,
-    num2 = null;
+let num1, num2;
 let operator = "";
 let currentValue = 0;
 
 numBtns.forEach((btn) => {
   btn.addEventListener('click', () => {
-    // prevent dividing by 0
-    if (operator === "÷" && btn.id === "0") {
-      updateValue("no");
-      currentValue = "";
-    } else {
-      updateValue(btn.id);
-    }
+    updateValue(btn.id);
   })
 })
 
@@ -84,7 +83,7 @@ operatorBtns.forEach((btn) => {
     }
     
     currentValue = 0;
-    if (num1 && num2) {
+    if (typeof num1 === "number" && typeof num2 === "number") {
       calculate();
     }
     if (!operator) {
@@ -96,10 +95,9 @@ operatorBtns.forEach((btn) => {
 
 equalsBtn.addEventListener('click', () => {
   // if full equation has been entered
-  if (num1 && operator && (num2 || currentValue)) {
+  if (typeof num1 === "number" && operator && (typeof num2 === "number" || currentValue)) {
     num2 = Number(currentValue);
     currentValue = 0;
     calculate();
-    operator = "";
   }
 })
