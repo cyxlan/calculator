@@ -31,7 +31,7 @@ function operate(num1, num2, operator) {
 }
 
 function updateValue(value) {
-  if (currentValue === 0) {
+  if (currentValue == 0) {
     currentValue = value;
   } else {
     currentValue += value;
