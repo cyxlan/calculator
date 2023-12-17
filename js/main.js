@@ -50,13 +50,13 @@ function calculate() {
     num1 = currentValue;
     operator = "";
   }
-  currentValue = 0;
+  currentValue = "";
   num2 = null;
 }
 
 let num1, num2;
 let operator = "";
-let currentValue = 0;
+let currentValue = "";
 
 numBtns.forEach((btn) => {
   btn.addEventListener('click', () => {
@@ -65,7 +65,7 @@ numBtns.forEach((btn) => {
 })
 
 clearBtn.addEventListener('click', () => {
-  currentValue = 0;
+  currentValue = "";
   updateValue(0);
   num1 = null;
   num2 = null;
@@ -75,14 +75,14 @@ clearBtn.addEventListener('click', () => {
 
 operatorBtns.forEach((btn) => {
   btn.addEventListener('click', () => {
-    if (!num1) {
+    if (typeof num1 !== "number") {
       num1 = Number(currentValue);
       history.textContent += num1;
-    } else {
+    } else if (currentValue !== "") {
       num2 = Number(currentValue);
     }
     
-    currentValue = 0;
+    currentValue = "";
     if (typeof num1 === "number" && typeof num2 === "number") {
       calculate();
     }
@@ -97,7 +97,7 @@ equalsBtn.addEventListener('click', () => {
   // if full equation has been entered
   if (typeof num1 === "number" && operator && (typeof num2 === "number" || currentValue)) {
     num2 = Number(currentValue);
-    currentValue = 0;
+    currentValue = "";
     calculate();
   }
 })
