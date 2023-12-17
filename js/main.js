@@ -55,7 +55,13 @@ let currentValue = 0;
 
 numBtns.forEach((btn) => {
   btn.addEventListener('click', () => {
-    updateValue(btn.id);
+    // prevent dividing by 0
+    if (operator === "÷" && btn.id === "0") {
+      updateValue("no");
+      currentValue = "";
+    } else {
+      updateValue(btn.id);
+    }
   })
 })
 
