@@ -87,8 +87,10 @@ operatorBtns.forEach((btn) => {
     if (num1 && num2) {
       calculate();
     }
-    operator = btn.id;
-    history.textContent += ` ${operator} `;
+    if (!operator) {
+      operator = btn.id;
+      history.textContent += ` ${operator} `;
+    }
   })
 })
 
