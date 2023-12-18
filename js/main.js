@@ -83,7 +83,7 @@ numBtns.forEach((btn) => {
 
 decimalBtn.addEventListener('click', () => {
   // prevent adding decimal point if current number already contains one
-  if (!currentValue.includes(".")) {
+  if (!currentValue.includes(".") && !lastNum2) {
     updateValue(".");
   }
 })
@@ -98,7 +98,9 @@ clearBtn.addEventListener('click', () => {
 })
 
 deleteBtn.addEventListener('click', () => {
-  updateValue("delete");
+  if (!lastNum2) {
+    updateValue("delete");
+  }
 })
 
 operatorBtns.forEach((btn) => {
