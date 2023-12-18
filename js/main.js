@@ -68,16 +68,20 @@ function calculate() {
   num2 = null;
 }
 
+function enterNum(num) {
+  // prevent updating number if an equation just finished & there isn't a new operator yet
+  if (!lastNum2) {
+    updateValue(num);
+  }
+}
+
 let num1, num2, lastNum2;
 let operator = "";
 let currentValue = "";
 
 numBtns.forEach((btn) => {
   btn.addEventListener('click', () => {
-    // prevent updating number if an equation just finished & there isn't a new operator yet
-    if (!lastNum2) {
-      updateValue(btn.id);
-    }
+    enterNum(btn.id);
   })
 })
 
@@ -139,5 +143,11 @@ equalsBtn.addEventListener('click', () => {
     lastNum2 = null;
     history.textContent += ` ${operator} `;
     calculate();
+  }
+})
+
+document.addEventListener('keydown', (e) => {
+  if (["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"].includes(e.key)) {
+    enterNum(e.key);
   }
 })
