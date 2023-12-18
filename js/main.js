@@ -32,6 +32,40 @@ function operate(num1, num2, operator) {
   }
 }
 
+function toggleDisabled(btn, disable) {
+  if (disable === true) {
+    btn.setAttribute("disabled", "disabled");
+  } else {
+    btn.removeAttribute("disabled");
+  }
+}
+function toggleBtns() {
+  // disable updating number if an equation just finished & there isn't a new operator yet
+  if (lastNum2) {
+    numBtns.forEach((btn) => {
+      toggleDisabled(btn, true);
+    })
+    toggleDisabled(deleteBtn, true);
+  } else {
+    numBtns.forEach((btn) => {
+      toggleDisabled(btn, false);
+    })
+    toggleDisabled(deleteBtn, false);
+  }
+  // disable decimal point if current number already contains one
+  if (String(currentValue).includes(".") || lastNum2) {
+    toggleDisabled(decimalBtn, true);
+  } else {
+    toggleDisabled(decimalBtn, false);
+  }
+  // disable equals btn if full equation hasn't been entered
+  if (typeof num1 !== "number" || !operator) {
+    toggleDisabled(equalsBtn, true);
+  } else {
+    toggleDisabled(equalsBtn, false);
+  }
+}
+
 function updateValue(value) {
   if (value === "delete") {
     if (currentValue.length > 1) {
@@ -50,6 +84,7 @@ function updateValue(value) {
     currentValue += value;
   }
   display.textContent = currentValue;
+  toggleBtns();
 }
 
 // calculate the current equation, then set up variables for the next one
@@ -58,35 +93,21 @@ function calculate() {
   if (operator === "÷" && num2 === 0) {
     updateValue("no");
   } else {
+    // save last num2 value for repeat operation
+    lastNum2 = num2;
     updateValue(+operate(num1, num2, operator).toFixed(3));
     history.textContent += `${num2} = ${currentValue}`;
     num1 = currentValue;
-    // save last num2 value for repeat operation
-    lastNum2 = num2;
     num2 = null;
   }
   currentValue = "";
 }
 
-function enterNum(num) {
-  // prevent updating number if an equation just finished & there isn't a new operator yet
-  if (!lastNum2) {
-    updateValue(num);
-  }
-}
 function enterDecimal() {
-  // prevent adding decimal point if current number already contains one
-  if (!currentValue.includes(".") && !lastNum2) {
-    if (Number(currentValue) === 0) {
-      updateValue("0.");
-    } else {
-      updateValue(".");
-    }
-  }
-}
-function enterDelete() {
-  if (!lastNum2) {
-    updateValue("delete");
+  if (Number(currentValue) === 0) {
+    updateValue("0.");
+  } else {
+    updateValue(".");
   }
 }
 function enterOperator(thisOperator) {
@@ -110,6 +131,7 @@ function enterOperator(thisOperator) {
     lastNum2 = null;
     operator = thisOperator;
     history.textContent += ` ${operator} `;
+    toggleBtns();
   }
 }
 function enterEquals() {
@@ -132,9 +154,11 @@ let num1, num2, lastNum2;
 let operator = "";
 let currentValue = "";
 
+toggleDisabled(equalsBtn, true);
+
 numBtns.forEach((btn) => {
   btn.addEventListener('click', () => {
-    enterNum(btn.id);
+    updateValue(btn.id);
   })
 })
 
@@ -145,11 +169,15 @@ clearBtn.addEventListener('click', () => {
   updateValue(0);
   num1 = null;
   num2 = null;
+  lastNum2 = null;
   operator = "";
   history.textContent = "";
+  toggleBtns();
 })
 
-deleteBtn.addEventListener('click', enterDelete)
+deleteBtn.addEventListener('click', () => {
+  updateValue("delete");
+})
 
 operatorBtns.forEach((btn) => {
   btn.addEventListener('click', () => {
@@ -162,11 +190,11 @@ equalsBtn.addEventListener('click', enterEquals)
 document.addEventListener('keydown', (e) => {
   e.preventDefault();
   if (["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"].includes(e.key)) {
-    enterNum(e.key);
+    updateValue(e.key);
   } else if (e.key === ".") {
     enterDecimal();
   } else if (e.key === "Delete" || e.key === "Backspace") {
-    enterDelete();
+    updateValue("delete");
   } else if (e.key === "+") {
     enterOperator("+");
   } else if (e.key === "-") {
