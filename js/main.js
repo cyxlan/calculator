@@ -4,6 +4,7 @@ const numBtns = document.querySelectorAll('.num-btn');
 const decimalBtn = document.querySelector('#decimal-btn');
 const operatorBtns = document.querySelectorAll('.operator-btn');
 const clearBtn = document.querySelector('#clear-btn');
+const deleteBtn = document.querySelector('#delete-btn');
 const equalsBtn = document.querySelector('#equals-btn');
 
 function add(a, b) {
@@ -32,7 +33,18 @@ function operate(num1, num2, operator) {
 }
 
 function updateValue(value) {
-  if (Number(currentValue) === 0) {
+  if (value === "delete") {
+    if (currentValue.length > 1) {
+      // delete last digit
+      currentValue = currentValue.slice(0, -1);
+    } else if (operator !== "") {
+      // delete last operator
+      operator = "";
+      history.textContent = history.textContent.slice(0, -3);
+    } else {
+      currentValue = 0;
+    }
+  } else if (Number(currentValue) === 0) {
     currentValue = value;
   } else {
     currentValue += value;
@@ -83,6 +95,10 @@ clearBtn.addEventListener('click', () => {
   num2 = null;
   operator = "";
   history.textContent = "";
+})
+
+deleteBtn.addEventListener('click', () => {
+  updateValue("delete");
 })
 
 operatorBtns.forEach((btn) => {
