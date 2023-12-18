@@ -63,9 +63,9 @@ function calculate() {
     num1 = currentValue;
     // save last num2 value for repeat operation
     lastNum2 = num2;
+    num2 = null;
   }
   currentValue = "";
-  num2 = null;
 }
 
 function enterNum(num) {
@@ -100,7 +100,10 @@ function enterOperator(thisOperator) {
   currentValue = "";
   if (typeof num1 === "number" && operator && typeof num2 === "number") {
     calculate();
-    operator = "";
+    // don't reset the operator if the calculation wasn't finished due to attempting to divide by 0
+    if (!(operator === "÷" && num2 === 0))  {
+      operator = "";
+    }
   }
   // if the operator hasn't been set yet or the last calculation was a repeat operation
   if (!operator || lastNum2) {
