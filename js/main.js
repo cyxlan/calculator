@@ -74,18 +74,7 @@ function enterNum(num) {
     updateValue(num);
   }
 }
-
-let num1, num2, lastNum2;
-let operator = "";
-let currentValue = "";
-
-numBtns.forEach((btn) => {
-  btn.addEventListener('click', () => {
-    enterNum(btn.id);
-  })
-})
-
-decimalBtn.addEventListener('click', () => {
+function enterDecimal() {
   // prevent adding decimal point if current number already contains one
   if (!currentValue.includes(".") && !lastNum2) {
     if (Number(currentValue) === 0) {
@@ -94,47 +83,33 @@ decimalBtn.addEventListener('click', () => {
       updateValue(".");
     }
   }
-})
-
-clearBtn.addEventListener('click', () => {
-  currentValue = "";
-  updateValue(0);
-  num1 = null;
-  num2 = null;
-  operator = "";
-  history.textContent = "";
-})
-
-deleteBtn.addEventListener('click', () => {
+}
+function enterDelete() {
   if (!lastNum2) {
     updateValue("delete");
   }
-})
-
-operatorBtns.forEach((btn) => {
-  btn.addEventListener('click', () => {
-    if (typeof num1 !== "number") {
-      num1 = Number(currentValue);
-      history.textContent += num1;
-    } else if (currentValue !== "") {
-      num2 = Number(currentValue);
-    }
-    
-    currentValue = "";
-    if (typeof num1 === "number" && typeof num2 === "number") {
-      calculate();
-      operator = "";
-    }
-    // if the operator hasn't been set yet or the last calculation was a repeat operation
-    if (!operator || lastNum2) {
-      lastNum2 = null;
-      operator = btn.id;
-      history.textContent += ` ${operator} `;
-    }
-  })
-})
-
-equalsBtn.addEventListener('click', () => {
+}
+function enterOperator(thisOperator) {
+  if (typeof num1 !== "number") {
+    num1 = Number(currentValue);
+    history.textContent += num1;
+  } else if (currentValue !== "") {
+    num2 = Number(currentValue);
+  }
+  
+  currentValue = "";
+  if (typeof num1 === "number" && typeof num2 === "number") {
+    calculate();
+    operator = "";
+  }
+  // if the operator hasn't been set yet or the last calculation was a repeat operation
+  if (!operator || lastNum2) {
+    lastNum2 = null;
+    operator = thisOperator;
+    history.textContent += ` ${operator} `;
+  }
+}
+function enterEquals() {
   // if full equation has been entered
   if (typeof num1 === "number" && operator && (typeof num2 === "number" || currentValue)) {
     num2 = Number(currentValue);
@@ -148,10 +123,56 @@ equalsBtn.addEventListener('click', () => {
     history.textContent += ` ${operator} `;
     calculate();
   }
+}
+
+let num1, num2, lastNum2;
+let operator = "";
+let currentValue = "";
+
+numBtns.forEach((btn) => {
+  btn.addEventListener('click', () => {
+    enterNum(btn.id);
+  })
 })
 
+decimalBtn.addEventListener('click', enterDecimal)
+
+clearBtn.addEventListener('click', () => {
+  currentValue = "";
+  updateValue(0);
+  num1 = null;
+  num2 = null;
+  operator = "";
+  history.textContent = "";
+})
+
+deleteBtn.addEventListener('click', enterDelete)
+
+operatorBtns.forEach((btn) => {
+  btn.addEventListener('click', () => {
+    enterOperator(btn.id);
+  })
+})
+
+equalsBtn.addEventListener('click', enterEquals)
+
 document.addEventListener('keydown', (e) => {
+  e.preventDefault();
   if (["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"].includes(e.key)) {
     enterNum(e.key);
+  } else if (e.key === ".") {
+    enterDecimal();
+  } else if (e.key === "Delete" || e.key === "Backspace") {
+    enterDelete();
+  } else if (e.key === "+") {
+    enterOperator("+");
+  } else if (e.key === "-") {
+    enterOperator("−")
+  } else if (e.key === "*") {
+    enterOperator("×");
+  } else if (e.key === "/") {
+    enterOperator("÷");
+  } else if (e.key === "=" || e.key === "Enter") {
+    enterEquals();
   }
 })
