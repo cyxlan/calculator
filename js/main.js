@@ -1,6 +1,7 @@
 const display = document.querySelector('#display');
 const history = document.querySelector('#history');
 const numBtns = document.querySelectorAll('.num-btn');
+const decimalBtn = document.querySelector('#decimal-btn');
 const operatorBtns = document.querySelectorAll('.operator-btn');
 const clearBtn = document.querySelector('#clear-btn');
 const equalsBtn = document.querySelector('#equals-btn');
@@ -66,6 +67,13 @@ numBtns.forEach((btn) => {
       updateValue(btn.id);
     }
   })
+})
+
+decimalBtn.addEventListener('click', () => {
+  // prevent adding decimal point if current number already contains one
+  if (!currentValue.includes(".")) {
+    updateValue(".");
+  }
 })
 
 clearBtn.addEventListener('click', () => {
