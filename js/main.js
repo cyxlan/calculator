@@ -16,7 +16,7 @@ function multiply(a, b) {
   return a * b;
 }
 function divide(a, b) {
-  return +(a / b).toFixed(3);
+  return a / b;
 }
 
 function operate(num1, num2, operator) {
@@ -46,7 +46,7 @@ function calculate() {
   if (operator === "÷" && num2 === 0) {
     updateValue("no");
   } else {
-    updateValue(operate(num1, num2, operator));
+    updateValue(+operate(num1, num2, operator).toFixed(3));
     history.textContent += `${num2} = ${currentValue}`;
     num1 = currentValue;
     // save last num2 value for repeat operation
