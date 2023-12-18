@@ -44,7 +44,7 @@ function updateValue(value) {
     } else {
       currentValue = 0;
     }
-  } else if (Number(currentValue) === 0) {
+  } else if (currentValue !== "0." && Number(currentValue) === 0) {
     currentValue = value;
   } else {
     currentValue += value;
@@ -88,7 +88,11 @@ numBtns.forEach((btn) => {
 decimalBtn.addEventListener('click', () => {
   // prevent adding decimal point if current number already contains one
   if (!currentValue.includes(".") && !lastNum2) {
-    updateValue(".");
+    if (Number(currentValue) === 0) {
+      updateValue("0.");
+    } else {
+      updateValue(".");
+    }
   }
 })
 
