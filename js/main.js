@@ -59,7 +59,7 @@ function toggleBtns() {
     toggleDisabled(decimalBtn, false);
   }
   // disable equals btn if full equation hasn't been entered
-  if (typeof num1 !== "number" || !operator) {
+  if (typeof num1 !== "number" || !operator || (typeof num2 !== "number" && !currentValue)) {
     toggleDisabled(equalsBtn, true);
   } else {
     toggleDisabled(equalsBtn, false);
@@ -103,11 +103,18 @@ function calculate() {
   currentValue = "";
 }
 
+function enterNum(num) {
+  if (!lastNum2) {
+    updateValue(num);
+  }
+}
 function enterDecimal() {
-  if (Number(currentValue) === 0) {
-    updateValue("0.");
-  } else {
-    updateValue(".");
+  if (!decimalBtn.disabled) {
+    if (Number(currentValue) === 0) {
+      updateValue("0.");
+    } else {
+      updateValue(".");
+    }
   }
 }
 function enterOperator(thisOperator) {
@@ -158,7 +165,7 @@ toggleDisabled(equalsBtn, true);
 
 numBtns.forEach((btn) => {
   btn.addEventListener('click', () => {
-    updateValue(btn.id);
+    enterNum(btn.id);
   })
 })
 
@@ -190,7 +197,7 @@ equalsBtn.addEventListener('click', enterEquals)
 document.addEventListener('keydown', (e) => {
   e.preventDefault();
   if (["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"].includes(e.key)) {
-    updateValue(e.key);
+    enterNum(e.key);
   } else if (e.key === ".") {
     enterDecimal();
   } else if (e.key === "Delete" || e.key === "Backspace") {
