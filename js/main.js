@@ -165,7 +165,7 @@ toggleDisabled(equalsBtn, true);
 
 numBtns.forEach((btn) => {
   btn.addEventListener('click', () => {
-    enterNum(btn.id);
+    enterNum(btn.textContent);
   })
 })
 
@@ -188,7 +188,7 @@ deleteBtn.addEventListener('click', () => {
 
 operatorBtns.forEach((btn) => {
   btn.addEventListener('click', () => {
-    enterOperator(btn.id);
+    enterOperator(btn.textContent);
   })
 })
 
