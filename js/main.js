@@ -37,7 +37,7 @@ function updateValue(value) {
     if (currentValue.length > 1) {
       // delete last digit
       currentValue = currentValue.slice(0, -1);
-    } else if (operator !== "") {
+    } else if (operator !== "" && Number(currentValue) === 0) {
       // delete last operator
       operator = "";
       history.textContent = history.textContent.slice(0, -3);
@@ -98,7 +98,7 @@ function enterOperator(thisOperator) {
   }
   
   currentValue = "";
-  if (typeof num1 === "number" && typeof num2 === "number") {
+  if (typeof num1 === "number" && operator && typeof num2 === "number") {
     calculate();
     operator = "";
   }
