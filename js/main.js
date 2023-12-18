@@ -117,7 +117,7 @@ function enterEquals() {
     calculate();
   }
   // if user clicks equals again without entering anything new, repeat the last operation
-  else if (typeof num1 === "number" && operator) {
+  else if (typeof num1 === "number" && operator && lastNum2) {
     num2 = lastNum2;
     lastNum2 = null;
     history.textContent += ` ${operator} `;
