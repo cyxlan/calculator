@@ -96,7 +96,7 @@ function calculate() {
     // save last num2 value for repeat operation
     lastNum2 = num2;
     updateValue(+operate(num1, num2, operator).toFixed(3));
-    history.textContent += `${num2} = ${currentValue}`;
+    history.textContent += `${num2} =`;
     num1 = currentValue;
     num2 = null;
   }
@@ -113,10 +113,10 @@ function enterDecimal() {
 function enterOperator(thisOperator) {
   if (typeof num1 !== "number") {
     num1 = Number(currentValue);
-    history.textContent += num1;
   } else if (currentValue !== "") {
     num2 = Number(currentValue);
   }
+  history.textContent = num1;
   
   currentValue = "";
   if (typeof num1 === "number" && operator && typeof num2 === "number") {
@@ -145,7 +145,7 @@ function enterEquals() {
   else if (typeof num1 === "number" && operator && lastNum2) {
     num2 = lastNum2;
     lastNum2 = null;
-    history.textContent += ` ${operator} `;
+    history.textContent = `${num1} ${operator} `;
     calculate();
   }
 }
