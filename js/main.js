@@ -69,7 +69,7 @@ function toggleBtns() {
     toggleDisabled(decimalBtn, false);
   }
   // disable operator btns if no new number has been entered since last operator
-  if (currentEquation.operator && currentValue !== "") {
+  if (currentEquation.operator && currentValue === "") {
     operatorBtns.forEach((btn) => {
       toggleDisabled(btn, true);
     })
@@ -79,7 +79,11 @@ function toggleBtns() {
     })
   }
   // disable equals btn if full equation hasn't been entered
-  if (typeof currentEquation.num1 !== "number" && !currentEquation.operator && (typeof currentEquation.num2 !== "number" || currentValue === "")) {
+  // (allow for repeat operations, but disable if calculation was cancelled
+  // because of trying to divide by 0 and user hasn't entered new number yet)
+  if (typeof currentEquation.num1 !== "number" ||
+      typeof currentEquation.num2 !== "number" && currentValue === "" && !lastEquation.result ||
+      currentEquation.num2 === 0 && currentEquation.operator === "÷") {
     toggleDisabled(equalsBtn, true);
   } else {
     toggleDisabled(equalsBtn, false);
@@ -112,7 +116,6 @@ function calculate() {
   // prevent dividing by 0
   if (currentEquation.operator === "÷" & currentEquation.num2 === 0) {
     updateValue("no");
-    currentEquation.num2 = null;
   } else {
     currentEquation.result = currentEquation.getResult();
     updateValue(currentEquation.result);
