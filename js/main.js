@@ -58,6 +58,16 @@ function toggleBtns() {
   } else {
     toggleDisabled(decimalBtn, false);
   }
+  // disable operator btns if no new number has been entered since last operator
+  if (operator && !currentValue) {
+    operatorBtns.forEach((btn) => {
+      toggleDisabled(btn, true);
+    })
+  } else {
+    operatorBtns.forEach((btn) => {
+      toggleDisabled(btn, false);
+    })
+  }
   // disable equals btn if full equation hasn't been entered
   if (typeof num1 !== "number" || !operator || (typeof num2 !== "number" && !currentValue)) {
     toggleDisabled(equalsBtn, true);
