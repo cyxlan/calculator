@@ -133,7 +133,10 @@ function enterOperator(thisOperator) {
   } else if (currentValue !== "") {
     num2 = Number(currentValue);
   }
-  history.textContent = num1;
+  // if starting a new equation or the last calculation was a repeat operation
+  if (!operator || lastNum2) {
+    history.textContent = num1;
+  }
   
   currentValue = "";
   if (typeof num1 === "number" && operator && typeof num2 === "number") {
@@ -141,9 +144,9 @@ function enterOperator(thisOperator) {
     // don't reset the operator if the calculation wasn't finished due to attempting to divide by 0
     if (!(operator === "÷" && num2 === 0))  {
       operator = "";
+      history.textContent = num1;
     }
   }
-  // if the operator hasn't been set yet or the last calculation was a repeat operation
   if (!operator || lastNum2) {
     lastNum2 = null;
     operator = thisOperator;
