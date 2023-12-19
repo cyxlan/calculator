@@ -32,6 +32,16 @@ function operate(num1, num2, operator) {
   }
 }
 
+function Equation() {
+  this.num1 = null;
+  this.num2 = null;
+  this.operator = "";
+  this.result = null;
+  this.getResult = function() {
+    return +operate(this.num1, this.num2, this.operator).toFixed(3);
+  }
+}
+
 function toggleDisabled(btn, disable) {
   if (disable === true) {
     btn.setAttribute("disabled", "disabled");
@@ -41,7 +51,7 @@ function toggleDisabled(btn, disable) {
 }
 function toggleBtns() {
   // disable updating number if an equation just finished & there isn't a new operator yet
-  if (lastNum2) {
+  if (lastEquation.result && !currentEquation.operator) {
     numBtns.forEach((btn) => {
       toggleDisabled(btn, true);
     })
@@ -53,13 +63,13 @@ function toggleBtns() {
     toggleDisabled(deleteBtn, false);
   }
   // disable decimal point if current number already contains one
-  if (String(currentValue).includes(".") || lastNum2) {
+  if (String(currentValue).includes(".") || (lastEquation.result && !currentEquation.operator)) {
     toggleDisabled(decimalBtn, true);
   } else {
     toggleDisabled(decimalBtn, false);
   }
   // disable operator btns if no new number has been entered since last operator
-  if (operator && !currentValue) {
+  if (currentEquation.operator && currentValue !== "") {
     operatorBtns.forEach((btn) => {
       toggleDisabled(btn, true);
     })
@@ -69,7 +79,7 @@ function toggleBtns() {
     })
   }
   // disable equals btn if full equation hasn't been entered
-  if (typeof num1 !== "number" || !operator || (typeof num2 !== "number" && !currentValue)) {
+  if (typeof currentEquation.num1 !== "number" && !currentEquation.operator && (typeof currentEquation.num2 !== "number" || currentValue === "")) {
     toggleDisabled(equalsBtn, true);
   } else {
     toggleDisabled(equalsBtn, false);
@@ -81,9 +91,9 @@ function updateValue(value) {
     if (currentValue.length > 1) {
       // delete last digit
       currentValue = currentValue.slice(0, -1);
-    } else if (operator !== "" && Number(currentValue) === 0) {
+    } else if (currentEquation.operator !== "" && Number(currentValue) === 0) {
       // delete last operator
-      operator = "";
+      currentEquation.operator = "";
       history.textContent = history.textContent.slice(0, -3);
     } else {
       currentValue = 0;
@@ -97,25 +107,31 @@ function updateValue(value) {
   toggleBtns();
 }
 
-// calculate the current equation, then set up variables for the next one
+// calculate the current equation, then set up for the next one
 function calculate() {
   // prevent dividing by 0
-  if (operator === "÷" && num2 === 0) {
+  if (currentEquation.operator === "÷" & currentEquation.num2 === 0) {
     updateValue("no");
+    currentEquation.num2 = null;
   } else {
-    // save last num2 value for repeat operation
-    lastNum2 = num2;
-    updateValue(+operate(num1, num2, operator).toFixed(3));
-    history.textContent += `${num2} =`;
-    num1 = currentValue;
-    num2 = null;
+    currentEquation.result = currentEquation.getResult();
+    updateValue(currentEquation.result);
+    history.textContent += `${currentEquation.num2} =`;
+    lastEquation = currentEquation;
+    currentEquation = new Equation();
+    currentEquation.num1 = currentValue;
   }
   currentValue = "";
 }
 
 function enterNum(num) {
-  if (!lastNum2) {
+  if (!lastEquation.result || currentEquation.operator) {
     updateValue(num);
+  }
+}
+function enterDelete() {
+  if (!deleteBtn.disabled) {
+    updateValue("delete");
   }
 }
 function enterDecimal() {
@@ -128,51 +144,49 @@ function enterDecimal() {
   }
 }
 function enterOperator(thisOperator) {
-  if (typeof num1 !== "number") {
-    num1 = Number(currentValue);
+  if (typeof currentEquation.num1 !== "number") {
+    currentEquation.num1 = Number(currentValue);
   } else if (currentValue !== "") {
-    num2 = Number(currentValue);
+    currentEquation.num2 = Number(currentValue);
   }
-  // if starting a new equation or the last calculation was a repeat operation
-  if (!operator || lastNum2) {
-    history.textContent = num1;
+  //  if starting a new equation or the last calculation was a repeat operation
+  if (!currentEquation.operator || lastEquation.num2) {
+    history.textContent = currentEquation.num1;
   }
-  
   currentValue = "";
-  if (typeof num1 === "number" && operator && typeof num2 === "number") {
+
+  if (typeof currentEquation.num1 === "number" && currentEquation.operator && typeof currentEquation.num2 === "number") {
     calculate();
-    // don't reset the operator if the calculation wasn't finished due to attempting to divide by 0
-    if (!(operator === "÷" && num2 === 0))  {
-      operator = "";
-      history.textContent = num1;
+    // if a new equation started (calculation wasn't cancelled because of trying to divide by 0)
+    if (!currentEquation.operator) {
+      history.textContent = currentEquation.num1;
     }
   }
-  if (!operator || lastNum2) {
-    lastNum2 = null;
-    operator = thisOperator;
-    history.textContent += ` ${operator} `;
-    toggleBtns();
+  if (!currentEquation.operator || lastEquation.num2) {
+    currentEquation.operator = thisOperator;
+    history.textContent += ` ${currentEquation.operator} `;
   }
+  toggleBtns();
 }
 function enterEquals() {
   // if full equation has been entered
-  if (typeof num1 === "number" && operator && (typeof num2 === "number" || currentValue)) {
-    num2 = Number(currentValue);
+  if (typeof currentEquation.num1 === "number" && currentEquation.operator && (typeof currentEquation.num2 === "number" || currentValue !== "")) {
+    currentEquation.num2 = Number(currentValue);
     currentValue = "";
     calculate();
   }
   // if user clicks equals again without entering anything new, repeat the last operation
-  else if (typeof num1 === "number" && operator && lastNum2) {
-    num2 = lastNum2;
-    lastNum2 = null;
-    history.textContent = `${num1} ${operator} `;
+  else if (typeof currentEquation.num1 === "number" && lastEquation.operator && !currentEquation.operator) {
+    [currentEquation.num2, currentEquation.operator] = [lastEquation.num2, lastEquation.operator];
+    history.textContent = `${currentEquation.num1} ${currentEquation.operator} `;
     calculate();
   }
+  toggleBtns();
 }
 
-let num1, num2, lastNum2;
-let operator = "";
 let currentValue = "";
+let currentEquation = new Equation();
+let lastEquation = new Equation();
 
 toggleDisabled(equalsBtn, true);
 
@@ -187,17 +201,13 @@ decimalBtn.addEventListener('click', enterDecimal)
 clearBtn.addEventListener('click', () => {
   currentValue = "";
   updateValue(0);
-  num1 = null;
-  num2 = null;
-  lastNum2 = null;
-  operator = "";
+  currentEquation = new Equation();
+  lastEquation = new Equation();
   history.textContent = "";
   toggleBtns();
 })
 
-deleteBtn.addEventListener('click', () => {
-  updateValue("delete");
-})
+deleteBtn.addEventListener('click', enterDelete)
 
 operatorBtns.forEach((btn) => {
   btn.addEventListener('click', () => {
@@ -214,7 +224,7 @@ document.addEventListener('keydown', (e) => {
   } else if (e.key === ".") {
     enterDecimal();
   } else if (e.key === "Delete" || e.key === "Backspace") {
-    updateValue("delete");
+    enterDelete();
   } else if (e.key === "+") {
     enterOperator("+");
   } else if (e.key === "-") {
