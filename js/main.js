@@ -102,7 +102,7 @@ function updateValue(value) {
     } else {
       currentValue = 0;
     }
-  } else if (currentValue !== "0." && Number(currentValue) === 0) {
+  } else if (!String(currentValue).includes(".") && Number(currentValue) === 0) {
     currentValue = value;
   } else {
     currentValue += value;
