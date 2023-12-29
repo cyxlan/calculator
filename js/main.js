@@ -51,7 +51,7 @@ function toggleDisabled(btn, disable) {
 }
 function toggleBtns() {
   // disable updating number if an equation just finished & there isn't a new operator yet
-  if (lastEquation.result && !currentEquation.operator) {
+  if (lastEquation.result && currentEquation.num1 && !currentEquation.operator) {
     numBtns.forEach((btn) => {
       toggleDisabled(btn, true);
     })
@@ -63,7 +63,7 @@ function toggleBtns() {
     toggleDisabled(deleteBtn, false);
   }
   // disable decimal point if current number already contains one
-  if (String(currentValue).includes(".") || (lastEquation.result && !currentEquation.operator)) {
+  if (String(currentValue).includes(".") || numBtns[0].disabled) {
     toggleDisabled(decimalBtn, true);
   } else {
     toggleDisabled(decimalBtn, false);
@@ -99,7 +99,9 @@ function updateValue(value) {
     } else if (currentEquation.operator !== "" && Number(currentValue) === 0) {
       // delete last operator
       currentEquation.operator = "";
-      history.textContent = history.textContent.slice(0, -3);
+      history.textContent = "";
+      currentValue = String(currentEquation.num1);
+      currentEquation.num1 = null;
     } else {
       currentValue = 0;
     }
@@ -129,7 +131,7 @@ function calculate() {
 }
 
 function enterNum(num) {
-  if (!lastEquation.result || currentEquation.operator) {
+  if (!numBtns[0].disabled) {
     updateValue(num);
   }
 }
