@@ -83,6 +83,7 @@ function toggleBtns() {
   // because of trying to divide by 0 and user hasn't entered new number yet)
   if (typeof currentEquation.num1 !== "number" ||
       typeof currentEquation.num2 !== "number" && currentValue === "" && !lastEquation.result ||
+      typeof currentEquation.num2 !== "number" && currentValue === "" && currentEquation.operator ||
       currentEquation.num2 === 0 && currentEquation.operator === "÷") {
     toggleDisabled(equalsBtn, true);
   } else {
