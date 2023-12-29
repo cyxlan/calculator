@@ -3,13 +3,18 @@
   box-sizing: border-box;
 }
 
+body {
+  background-color: #25252b;
+}
 body, button {
   font-family: 'Inconsolata', monospace;
 }
 
 /* CALCULATOR */
 #calculator {
-  background-color: gray;
+  background-color: #c2cfc8;
+  border-radius: 5px;
+  box-shadow: 5px 5px 20px 0px rgba(0, 0, 0, 0.25);
   width: 400px;
   height: 620px;
   padding: 30px;
@@ -21,8 +26,13 @@ body, button {
 
 /* DISPLAY */
 #display-container {
-  background-color: black;
-  color: white;
+  background-color: #014227;
+  color: #c2db7e;
+  text-shadow: 0 0 10px #2f7a0d;
+  box-shadow: 0 0 20px #00311c inset,
+              0 0 5px #00311c inset,
+              0 0 10px #9bb3b0;
+  border-radius: 3px;
   height: 120px;
   margin: 0 auto;
   text-align: right;
@@ -32,21 +42,28 @@ body, button {
   padding: 15px;
 }
 
-#display {
+#display,
+#history {
   position: absolute;
-  bottom: 0;
   right: 0;
+  padding: inherit;
+}
+#display {
+  bottom: 0;
   padding: inherit;
   font-size: 50px;
 }
 #history {
+  top: 0;
+  white-space: nowrap;
   font-size: 30px;
+  height: 20px;
 }
 
 /* BUTTONS */
 #btn-container {
   display: grid;
-  gap: 5px;
+  gap: 10px;
   margin-top: 30px;
   height: 400px;
   grid-template-columns: repeat(4, 1fr);
@@ -55,6 +72,57 @@ body, button {
 
 .btn {
   font-size: 40px;
+  border: 0;
+  border-radius: 3px;
+  box-shadow: 0 0 10px #9bb3b0,
+              0 0 5px rgba(26, 39, 44, 0.2) inset;
+  position: relative;
+  transition: 50ms font-size;
+}
+.btn:not(:disabled) {
+  cursor: pointer;
+}
+.btn:not(:disabled):active {
+  font-size: 38px;
+  box-shadow: 0 0 10px #9bb3b0,
+              0 0 5px rgb(26, 39, 44) inset;
+}
+/* inset shadow on hover */
+.btn::after {
+  content: "";
+  width: 100%;
+  height: 100%;
+  border-radius: 3px;
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  box-shadow: 0 0 10px rgba(26, 39, 44, 0.8) inset;
+  opacity: 0;
+  transition: 100ms ease-out opacity;
+}
+.btn:not(:disabled):hover::after,
+.btn:not(:disabled):active::after {
+  opacity: 1;
+}
+#btn-container .btn:disabled {
+  opacity: 0.5;
+  background-color: #828282;
+  color: #000;
+}
+
+#clear-btn,
+#delete-btn {
+  background-color: #597e84;
+}
+.operator-btn,
+#equals-btn {
+  background-color: #2a4d5b;
+  color: #fff;
+}
+.num-btn,
+#decimal-btn {
+  background-color: #87a09c;
 }
 
 #clear-btn {
