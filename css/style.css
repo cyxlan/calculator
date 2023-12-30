@@ -5,6 +5,7 @@
 
 body {
   background-color: #25252b;
+  margin: 0;
 }
 body, button {
   font-family: 'Inconsolata', monospace;
@@ -178,4 +179,31 @@ body, button {
 }
 #add-btn {
   grid-area: 5 / 4;
+}
+
+/* FOOTER */
+footer {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  margin-bottom: 40px;
+  color: #bbbbbb;
+}
+footer p {
+  margin: 0;
+  text-transform: uppercase;
+  font-size: 20px;
+}
+footer a {
+  color: #86c6bb;
+  text-decoration: none;
+  transition: text-shadow 100ms ease-out;
+}
+footer a:hover,
+footer a:focus {
+  text-decoration: underline;
+  text-shadow: 0 0 10px #2a4d5b;
 }
